@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
-    "electron-updater": "latest",
-    "node-printer": "^1.0.4",
+    "axios": "^1.8.3",
+    "electron-updater": "^4.0.0",
     "quasar": "^2.16.0",
     "vue": "^3.4.18",
     "vue-router": "^4.0.12"
@@ -31,6 +31,7 @@
     "@vue/eslint-config-typescript": "^14.4.0",
     "autoprefixer": "^10.4.2",
     "electron": "^35.0.2",
+    "electron-builder": "^24.3.0",
     "eslint": "^9.14.0",
     "eslint-plugin-vue": "^9.30.0",
     "globals": "^15.12.0",
@@ -43,28 +44,6 @@
     "node": "^28 || ^26 || ^24 || ^22 || ^20 || ^18",
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
-  },
-  "build": {
-    "appId": "com.your-company.your-app",
-    "productName": "QuasarDemo",
-    "publish": [
-      {
-        "provider": "generic",
-        "url": "https://your-update-server.com/updates"
-      }
-    ],
-    "win": {
-      "target": [
-        "nsis"
-      ],
-      "icon": "src-electron/icons/icon.ico"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "QuasarDemo"
-    }
   }
+  
 }

@@ -34,6 +34,8 @@ import type { PrinterInfo } from 'electron';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   // 检查更新
+  fetchRandomUser: () => ipcRenderer.invoke('fetch-random-user'),
+  // 检查更新
   checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
   // 退出并安装更新
   quitAndInstall: () => ipcRenderer.invoke('quit-and-install'),

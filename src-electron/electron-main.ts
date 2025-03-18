@@ -3,6 +3,7 @@ import path from 'path';
 import os from 'os';
 import { fileURLToPath } from 'url'
 import pkg from 'electron-updater';
+import axios from 'axios';
 
 const {autoUpdater} = pkg
 
@@ -12,6 +13,8 @@ const platform = process.platform || os.platform();
 const currentDir = fileURLToPath(new URL('.', import.meta.url));
 
 let mainWindow: BrowserWindow | undefined;
+
+
 
 // 打印机相关的IPC处理
 ipcMain.handle('get-printers', async () => {
@@ -138,11 +141,11 @@ ipcMain.handle('print-file', async (_event, { printerName, filePath, options = {
 
 // 配置自动更新
 function configureAutoUpdater() {
-  // 设置更新服务器地址
-  autoUpdater.setFeedURL({
-    provider: 'generic',
-    url: 'https://lujingfeng.oss-cn-beijing.aliyuncs.com/updates'
-  });
+  // 配置增量更新
+  autoUpdater.autoDownload = true; // 自动下载更新
+  autoUpdater.allowDowngrade = true; // 允许降级
+  autoUpdater.channel = 'latest'; // 更新通道
+  //autoUpdater.autoInstall = false; // 不自动安装，等待用户确认
 
   // 检查更新错误
   autoUpdater.on('error', (err) => {
@@ -193,6 +196,17 @@ ipcMain.handle('check-for-updates', () => {
 ipcMain.handle('quit-and-install', () => {
   autoUpdater.quitAndInstall();
 });
+
+
+ipcMain.handle('fetch-random-user', async () => {
+  try {
+      const response = await axios.get('https://randomuser.me/api/');
+      return response.data;
+  } catch (error) {
+      return { error: (error as Error).message };
+  }
+});
+
 
 async function createWindow() {
   /**

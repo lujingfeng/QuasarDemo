@@ -26,6 +26,7 @@ export interface PrinterInfo {
 }
 
 export interface ElectronAPI {
+  fetchRandomUser:()=> Promise<string[]>;
   // 打印机相关API
   getPrinters: () => Promise<PrinterInfo[]>;
   printFile: (printerName: string, filePath: string) => Promise<void>;

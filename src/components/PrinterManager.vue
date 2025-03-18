@@ -59,6 +59,12 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <q-btn color="primary" label="主进程实现远程接口调用" @click="fetchRandomUser" />
+
+    <q-btn @click="addData">添加数据</q-btn>
+    <q-btn @click="fetchData">获取数据</q-btn>
+    <q-btn @click="testTransaction">测试事务回滚</q-btn>
   </div>
 </template>
 
@@ -117,6 +123,16 @@ const handlePrintProgress = (progress: number) => {
   }
 };
 
+const fetchRandomUser = async () => {
+  const result = await window.electronAPI.fetchRandomUser();
+  console.log('随机用户:',result);
+  $q.notify({
+      type: 'info',
+      message: `获取随机用户成功`,
+      position: 'top'
+    });
+};
+
 onMounted(() => {
   void refreshPrinters();
   window.electronAPI.onPrintProgress(handlePrintProgress);
@@ -126,6 +142,62 @@ onUnmounted(() => {
   // 清理事件监听器
   window.electronAPI.onPrintProgress(() => {});
 });
+
+
+let db: IDBDatabase;
+const request = indexedDB.open("TestDB", 1);
+request.onupgradeneeded = function(event:Event) {
+  db = (event.target as IDBOpenDBRequest).result;
+  if (!db.objectStoreNames.contains("users")) {
+    db.createObjectStore("users", { keyPath: "id" });
+  }
+};
+request.onsuccess = function(event:Event) {
+  db = (event.target as IDBOpenDBRequest).result;
+  if (!db.objectStoreNames.contains("users")) {
+    db.createObjectStore("users", { keyPath: "id" });
+  }
+};
+request.onerror = function(event:Event) {
+  console.error("Database error: ", (event.target as IDBOpenDBRequest).error?.message);
+};
+
+function addData() {
+  const transaction = db.transaction(["users"], "readwrite");
+  const store = transaction.objectStore("users");
+  const user = { id: Date.now(), name: "User" + Math.floor(Math.random() * 100) };
+  store.add(user);
+  transaction.oncomplete = () => alert("Data added!");
+}
+
+function fetchData() {
+  const transaction = db.transaction(["users"], "readonly");
+  const store = transaction.objectStore("users");
+  const request = store.getAll();
+  request.onsuccess = function() {
+    $q.notify({
+      type: 'info',
+      message:  JSON.stringify(request.result, null, 2),
+      position: 'top'
+    });
+  };
+}
+
+function testTransaction() {
+  const transaction = db.transaction(["users"], "readwrite");
+  const store = transaction.objectStore("users");
+  store.add({ id: "rollback", name: "Will be rolled back" });
+  transaction.abort();
+  transaction.onabort = () => {
+    $q.notify({
+      type: 'info',
+      message:  "rolled back",
+      position: 'top'
+    });
+  }
+}
+
+
 </script>
 
 <style scoped>
