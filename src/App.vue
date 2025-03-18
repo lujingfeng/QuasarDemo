@@ -13,11 +13,12 @@ onMounted(() => {
   if( !window.electronAPI){
     return
   }
+  
   // 监听更新错误
-  window.electronAPI.onUpdateError((error) => {
+  window.electronAPI.onUpdateError(() => {
     $q.notify({
       type: 'negative',
-      message: `更新出错：${error.message}`,
+      message: `更新失败`,
       position: 'top'
     });
   });

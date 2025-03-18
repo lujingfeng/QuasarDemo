@@ -29,7 +29,8 @@
  */
 
 import { contextBridge, ipcRenderer } from 'electron';
-import type { UpdateInfo, ProgressInfo, PrinterInfo } from '../src/electron-api';
+import type { UpdateInfo, ProgressInfo } from '../src/electron-api';
+import type { PrinterInfo } from 'electron';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   // 检查更新

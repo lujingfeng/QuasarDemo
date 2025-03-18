@@ -82,5 +82,12 @@ export default defineConfigWithVueTs(
     }
   },
 
+  {
+    files: ['src-electron/electron-main.ts'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off'
+    }
+  },
+
   prettierSkipFormatting
 )

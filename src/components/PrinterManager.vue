@@ -76,6 +76,8 @@ const progressMessage = ref('');
 const refreshPrinters = async () => {
   try {
     printers.value = await window.electronAPI.getPrinters();
+
+    console.log('打印机列表:',printers.value);
   } catch (error) {
     $q.notify({
       type: 'negative',

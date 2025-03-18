@@ -1,28 +1,16 @@
 declare module 'node-printer' {
-  interface PrinterInfo {
-    name: string;
-    description?: string;
-    status?: string;
-    isDefault?: boolean;
-  }
-
-  interface PrintOptions {
+  interface PrinterOptions {
     filename: string;
     printer: string;
     success?: (jobID: number) => void;
-    error?: (error: Error) => void;
+    error?: (err: Error) => void;
   }
 
-  interface PrintJob {
-    id: number;
-    status: string;
+  interface Printer {
+    getPrinters(): string[];
+    printFile(options: PrinterOptions): void;
   }
 
-  function getPrinters(): PrinterInfo[];
-  function printFile(options: PrintOptions): Promise<PrintJob>;
-
-  export = {
-    getPrinters,
-    printFile
-  };
+  const printer: Printer;
+  export = printer;
 } 
