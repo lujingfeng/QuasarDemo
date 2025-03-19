@@ -2,7 +2,7 @@
   <div class="printer-manager">
     <div class="row q-mb-md">
       <div class="col-12">
-        <h5 class="q-mt-none q-mb-md">打印机管理</h5>
+        <h5 class="q-mt-none q-mb-md">打印机管理2</h5>
       </div>
     </div>
 
@@ -72,6 +72,7 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useQuasar } from 'quasar';
 import type { PrinterInfo } from '../electron-api';
+import { app } from 'electron';
 
 const $q = useQuasar();
 const printers = ref<PrinterInfo[]>([]);
@@ -100,7 +101,8 @@ const printTestPage = async (printerName: string) => {
     progressMessage.value = '准备打印...';
     
     // 这里应该替换为实际的测试页文件路径
-    const testPagePath = '/path/to/test-page.pdf';
+    const appPath = app.getAppPath();
+    const testPagePath = `${appPath}/class.docx`
     await window.electronAPI.printFile(printerName, testPagePath);
   } catch (error) {
     $q.notify({

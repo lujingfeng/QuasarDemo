@@ -15,12 +15,14 @@ onMounted(() => {
   }
   
   // 监听更新错误
-  window.electronAPI.onUpdateError(() => {
+  window.electronAPI.onUpdateError((err) => {
     $q.notify({
       type: 'negative',
       message: `更新失败`,
       position: 'top'
     });
+
+    console.error('更新错误log:', err);
   });
 
   // 监听检查更新状态
